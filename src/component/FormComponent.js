@@ -12,6 +12,7 @@ function FormComponent(props) {
 
     const [temp1, settemp1] = useState("")
     const [check, setcheck] = useState([]);
+    const [flag, setflag] = useState(false);
     useEffect(() => {
 
     }, [props.data])
@@ -23,15 +24,24 @@ function FormComponent(props) {
 
 
     const handlesubmit = () => {
-        console.log("arr", arr);
-        const array = Object.assign({}, ...arr);
-        console.log("values", array);
+        // console.log("arr", arr);
+        // const array = Object.assign({}, ...arr);
+        // console.log("values", array);
+
+        if (flag) {
+            console.log(arr);
+        }
+        else {
+            console.log("arr", arr);
+            const array = Object.assign({}, ...arr);
+            console.log("values", array);
+        }
 
         // console.log(arr);
     }
 
-    const onChange = (e, item, index) => {
-
+    const onChange = (e, item, index, name) => {
+        setflag(true)
         let find = check.indexOf(item);
         if (find > -1) {
             check.splice(find, 1)
@@ -41,7 +51,9 @@ function FormComponent(props) {
         }
 
         console.log(check);
-        arr[index] = check;
+        const temp = name;
+        arr[temp] = check;
+        // arr[index] = check
         console.log(arr);
         // const array = Object.assign({}, ...arr);
         // console.log("values", array);
@@ -134,14 +146,14 @@ function FormComponent(props) {
                             {
                                 dat.type == "Checkbox" && props.submit ?
 
-                                    <FormGroup>
+                                    < FormGroup >
                                         <FormLabel id="demo-radio-buttons-group-label">{dat.name}</FormLabel>
                                         {myarr.map((item) => {
                                             return (
                                                 <FormControlLabel control={<Checkbox />}
                                                     value={item}
                                                     name={dat.name}
-                                                    onChange={(e) => onChange(e, item, index)}
+                                                    onChange={(e) => onChange(e, item, index, dat.name)}
                                                     selected={check.includes(item)}
                                                     label={item}
 
@@ -195,7 +207,7 @@ function FormComponent(props) {
                     >Submit  </Button>
                     : ""
             }
-        </div>
+        </div >
     )
 }
 
