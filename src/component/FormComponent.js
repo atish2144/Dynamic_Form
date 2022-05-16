@@ -4,14 +4,14 @@ import { useEffect } from 'react';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-
+const arr = [];
 function FormComponent(props) {
 
 
     const [formdata, setformdata] = useState()
-    const arr = [];
-    const [temp1, settemp1] = useState("")
 
+    const [temp1, settemp1] = useState("")
+    const [check, setcheck] = useState([]);
     useEffect(() => {
 
     }, [props.data])
@@ -23,11 +23,31 @@ function FormComponent(props) {
 
 
     const handlesubmit = () => {
+        console.log("arr", arr);
         const array = Object.assign({}, ...arr);
-        console.log(array);
+        console.log("values", array);
 
         // console.log(arr);
     }
+
+    const onChange = (e, item, index) => {
+
+        let find = check.indexOf(item);
+        if (find > -1) {
+            check.splice(find, 1)
+        }
+        else {
+            check.push(item)
+        }
+
+        console.log(check);
+        arr[index] = check;
+        console.log(arr);
+        // const array = Object.assign({}, ...arr);
+        // console.log("values", array);
+    }
+
+
 
     return (
         <div>
@@ -35,7 +55,7 @@ function FormComponent(props) {
 
             <div className='container1' style={{ display: "flex", flexDirection: "row", width: "100%" }}></div>
 
-            {/* <label>Form</label> */}
+            <label>Form</label>
             {
                 props.data.map((dat, index) => {
 
@@ -43,7 +63,8 @@ function FormComponent(props) {
 
                     // console.log(myarr);
                     return (
-                        <Stack direction="column" spacing={2}>
+
+                        <Stack direction="column" spacing={2} key={index} sx={{ alignItems: "center " }}>
 
                             {
                                 dat.type === "Text" &&
@@ -117,7 +138,14 @@ function FormComponent(props) {
                                         <FormLabel id="demo-radio-buttons-group-label">{dat.name}</FormLabel>
                                         {myarr.map((item) => {
                                             return (
-                                                <FormControlLabel control={<Checkbox />} label={item} />
+                                                <FormControlLabel control={<Checkbox />}
+                                                    value={item}
+                                                    name={dat.name}
+                                                    onChange={(e) => onChange(e, item, index)}
+                                                    selected={check.includes(item)}
+                                                    label={item}
+
+                                                />
                                             )
                                         })}
                                     </FormGroup>
@@ -159,10 +187,14 @@ function FormComponent(props) {
                         </Stack>)
                 })
             }
-            <Button variant="contained" style={{ marginBottom: "500px", marginRight: "50px", width: "300px" }}
-                onClick={() => handlesubmit()}
-            >Submit  </Button>
 
+            {
+                props.submit ?
+                    <Button variant="contained" style={{ marginBottom: "500px", width: "300px" }}
+                        onClick={() => handlesubmit()}
+                    >Submit  </Button>
+                    : ""
+            }
         </div>
     )
 }
